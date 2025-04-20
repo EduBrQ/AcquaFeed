@@ -1,0 +1,142 @@
+<div class="table-container">
+  <!-- Filtros -->
+  <div
+    class="filters"
+    style="
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    "
+  >
+    <mat-form-field style="width: 212px" appearance="outline">
+      <mat-label>Filtrar por data</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="filtroData" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Filtrar por viveiro</mat-label>
+      <input matInput placeholder="Ex: Viveiro 1" [(ngModel)]="filtroViveiro" />
+    </mat-form-field>
+
+    <div class="button-container" (click)="limparFiltros()">
+      <button  mat-mini-fab color="secondary"  aria-label="Limpar Filtros">
+        <mat-icon color="white">clear</mat-icon>
+      </button>
+      <button mat-mini-fab  color="primary" (click)="addLinha()">
+        <mat-icon color="white">add</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabela Responsiva -->
+  <div style="overflow-x: auto; margin-bottom: 16px">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-elevation-z8"
+      style="width: 100%; min-width: 600px"
+    >
+      <!-- Data -->
+      <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <td class="date-table"  mat-cell *matCellDef="let row">
+          <mat-form-field style="width: 160px !important"  appearance="outline" class="input-inline">
+            <input
+              matInput
+              [matDatepicker]="rowDatePicker"
+              [(ngModel)]="row.data"
+            />
+
+            <mat-hint style="display: none;"></mat-hint>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="rowDatePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker touchUi #rowDatePicker></mat-datepicker>
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <!-- Viveiro -->
+      <ng-container matColumnDef="viveiro">
+        <th mat-header-cell *matHeaderCellDef>V</th>
+        <td mat-cell *matCellDef="let row">
+          <input
+            type="text"
+            [(ngModel)]="row.viveiro"
+            placeholder="Viveiro"
+            class="input-inline"
+          />
+        </td>
+      </ng-container>
+
+      <!-- Manhã -->
+      <ng-container matColumnDef="manha">
+        <th mat-header-cell *matHeaderCellDef>Manhã</th>
+        <td mat-cell *matCellDef="let row">
+          <input type="number" [(ngModel)]="row.manha" class="input-inline" />
+        </td>
+      </ng-container>
+
+      <!-- Tarde -->
+      <ng-container matColumnDef="tarde">
+        <th mat-header-cell *matHeaderCellDef>Tarde</th>
+        <td mat-cell *matCellDef="let row">
+          <input type="number" [(ngModel)]="row.tarde" class="input-inline" />
+        </td>
+      </ng-container>
+
+      <!-- Total -->
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let row">
+          {{ calcularTotal(row.manha, row.tarde) }} kg
+        </td>
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="['data', 'viveiro', 'manha', 'tarde', 'total']"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="
+          let row;
+          columns: ['data', 'viveiro', 'manha', 'tarde', 'total']
+        "
+      ></tr>
+    </table>
+  </div>
+
+  <!-- Paginador -->
+  <mat-paginator
+    [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  ></mat-paginator>
+
+  <div style="margin-top: 32px">
+    <label>Grafico</label>
+    <apx-chart
+      *ngIf="chartOptions.series"
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [xaxis]="chartOptions.xaxis"
+      [dataLabels]="chartOptions.dataLabels"
+      [stroke]="chartOptions.stroke"
+      [title]="chartOptions.title"
+    ></apx-chart>
+  </div>
+
+  <!-- Total Geral -->
+  <div
+    class="total-geral"
+    style="margin-top: 24px; font-size: 18px; color: #fff"
+  >
+    <strong>Total Geral do Dia:</strong> {{ totalGeralDoDia }} kg
+  </div>
+</div>

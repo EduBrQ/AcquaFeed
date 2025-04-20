@@ -1,0 +1,28 @@
+.total-geral {
+  margin-top: 16px;
+  font-size: 18px;
+  color: #fff;
+}
+
+.input-inline {
+  width: 100%;
+  padding: 4px;
+  background-color: transparent;
+  border: none;
+  ;
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+.date-table {
+  padding-left: 0px !important;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  width: 140px;
+  gap: inherit;
+}
